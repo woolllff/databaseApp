@@ -6,6 +6,9 @@ import {
     FormLabel,
     FormErrorMessage,
     FormHelperText,
+    Stack,
+    Box,
+    Center
 } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
@@ -70,53 +73,59 @@ export default class DatabaseMaker extends Component {
     render() {
 
         return (
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <FormControl onSubmit={this.handleSubmit}>
-                    <div className='DB_name'>
-                        <FormLabel >Database Name</FormLabel >
-                        <Input type="text" name="dbName" value={this.state.dbName || ""} onChange={e => this.updateDatabaseName(e)} />
-                    </div>
+            // <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Center>
+                <FormControl onSubmit={this.handleSubmit} >
+
+                    <FormLabel >Database Name</FormLabel >
+                    <Input type="text" name="dbName" value={this.state.dbName || ""} onChange={e => this.updateDatabaseName(e)} />
+
                     {this.state.tables.map((table, t_index) => (
 
-                        <div className='table_name'>
+                        <Stack paddingLeft='20'>
                             <FormLabel>Table name</FormLabel>
                             <Input type="text" name="tableName" value={table.tableName || ""} onChange={e => this.updateTableName(t_index, e)} />
 
-                            {
-                                t_index ?
-                                    <button type="button" className="button remove" onClick={() => this.removeTable(t_index)}>Remove</button>
-                                    : null
-                            }
+
                             {table.columns.map((column, c_index) => (
 
-                                <div className="form-inline" key={c_index}>
+                                <Stack paddingLeft='20' direction={['column', 'row']} spacing='24px' key={c_index}>
+                                    <Box>
+                                        <FormLabel>Column name</FormLabel>
+                                        <Input type="text" name="columnName" value={column.columnName || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
+                                    </Box>
+                                    <Box>
+                                        <FormLabel>Data Type</FormLabel>
+                                        <Input type="text" name="dataType" value={column.dataType || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
+                                    </Box>
+                                    <Box>
+                                        <FormLabel>Constraints</FormLabel>
+                                        <Input type="text" name="constraints" value={column.constraints || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
 
-                                    <FormLabel>Column name</FormLabel>
-                                    <Input type="text" name="columnName" value={column.columnName || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
-                                    <FormLabel>Data Type</FormLabel>
-                                    <Input type="text" name="dataType" value={column.dataType || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
-                                    <FormLabel>Constraints</FormLabel>
-                                    <Input type="text" name="constraints" value={column.constraints || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
-                                    {
-                                        c_index ?
-                                            <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeColumn(t_index, c_index)}>Remove</Button>
-                                            : null
-                                    }
-                                </div>
+
+                                        <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeColumn(t_index, c_index)}>Remove Column</Button>
+
+
+                                    </Box>
+
+                                </Stack>
 
                             ))}
 
                             <Button colorScheme='blue' className="buttonAddColumn" type="button" onClick={() => this.addColumn(t_index)}>Add Column</Button>
 
-                        </div>
+                            <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeTable(t_index)}> Remove Table </Button>
+
+                        </Stack>
                     ))}
+                    <Stack>
                     <Button colorScheme='blue' className="buttonAddTable" type="button" onClick={() => this.addTable()}>Add Table</Button>
 
-                    <div className="button-section">
-                        <Button colorScheme='blue' className="buttonSubmit" type="submit" onClick={() => this.handleSubmit()}>Submit</Button>
-                    </div>
+                    <Button colorScheme='blue' className="buttonSubmit" type="submit" onClick={() => this.handleSubmit()}>Submit</Button>
+                    </Stack>
                 </FormControl>
-            </div>
+            {/* </div> */}
+            </Center>
         );
     }
 }
