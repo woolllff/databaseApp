@@ -24,8 +24,8 @@
 // ]
 // }
 
-import {DBCreator,tableCreator,FkeyAdder  } from './SQLConvertorHelperFunc.js';
-function SQLConvertorFunc(Data)
+import {DBCreator,tableCreator,FkeyAdder  } from "./SQLConvertorHelperFunc";
+export function SQLConvertorFunc(Data)
     {
     SQLCommads = [];
     

@@ -1,4 +1,4 @@
-function DBCreator()
+export function DBCreator()
     {
     var Command =new String();
     Command += "CREATE DATABASE ";
@@ -7,20 +7,21 @@ function DBCreator()
     return Command;
     }
 
-function tableCreator(ObjList,tableName)
+export function tableCreator(ObjList,tableName)
     {
     var Command =new String();
     Command += "Create "; 
     Command += tableName;
     Command += " (";
-    var i,temp;
+    var i,temp,j;
     for(i=0;i<ObjList.length;i++)
         {
         ColObj = ObjList[i]
-        for(var key in ColObj)
+        for(j=0;j<ColObj.length;j++)
             {
-            Command += ColObj[key];
+            Command += ColObj[j][0];
             Command += " ";
+            Command += ColObj[j][1];
             }
         Command +=",";
         }
@@ -29,19 +30,19 @@ function tableCreator(ObjList,tableName)
     return Command;
     }
 
-function FkeyAdder(FKeyList)
+export function FkeyAdder(FKeyList)
     {
     var table1 = FkeyList[0];
     var table2 = FkeyList[1];
     var Command = String();
     Command +="ALTER TABLE ";
-    Command += table0[0];
-    Command += " ADD FORIEGN KEY (";
-    Command += table0[1];
-    Command += ") REFERENCES ";
     Command += table1[0];
-    Command += "(";
+    Command += " ADD FORIEGN KEY (";
     Command += table1[1];
+    Command += ") REFERENCES ";
+    Command += table2[0];
+    Command += "(";
+    Command += table2[1];
     Command += ");" 
     return Command;
     }
