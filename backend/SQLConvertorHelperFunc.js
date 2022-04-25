@@ -1,48 +1,73 @@
-export function DBCreator()
+module.export ={DBCreator,tableCreator,FkeyAdder};
+function DBCreator()
     {
     var Command =new String();
     Command += "CREATE DATABASE ";
-    Command += Windows.DBName;
+    Command += DBName;
     Command += ";";
     return Command;
     }
 
-export function tableCreator(ObjList,tableName)
+function tableCreator(ObjList,tableName)
     {
     var Command =new String();
-    Command += "Create "; 
+    Command += "CREATE TABLE "; 
     Command += tableName;
     Command += " (";
     var i,temp,j;
     for(i=0;i<ObjList.length;i++)
         {
-        ColObj = ObjList[i]
-        for(j=0;j<ColObj.length;j++)
+        ColObj = ObjList[i];
+
+        for(var key in ObjList[i])
             {
-            Command += ColObj[j][0];
+            if(String(key)=="PRIMARY KEY")
+                {
+                Command += String(key);
+                Command += "(";
+                Command += String(ObjList[i][key]);
+                Command += ")";
+                continue;
+                }
+            Command += String(key);
             Command += " ";
-            Command += ColObj[j][1];
+            Command += String(ObjList[i][key]);
             }
-        Command +=",";
+
+        if(i!=ObjList.length-1)
+            {
+            Command +=",";
+            }
         }
 
     Command += " );";
     return Command;
     }
 
-export function FkeyAdder(FKeyList)
+function FkeyAdder(FKeyList)
     {
-    var table1 = FkeyList[0];
-    var table2 = FkeyList[1];
+    var table1 = FKeyList[0];
+    var table2 = FKeyList[1];
     var Command = String();
     Command +="ALTER TABLE ";
-    Command += table1[0];
-    Command += " ADD FORIEGN KEY (";
-    Command += table1[1];
-    Command += ") REFERENCES ";
-    Command += table2[0];
-    Command += "(";
-    Command += table2[1];
-    Command += ");" 
+    var key1,val1,key2,val2;
+    for (var key in table1)
+        {
+        key1 = String(key);
+        val1 = String(table1[key]);
+        }    
+    for (var key in table2)
+        {
+        key2 = String(key);
+        val2 = String(table2[key]);
+        }    
+    Command += key1;
+    Command += " ADD FOREIGN  KEY ('";
+    Command += val2;
+    Command += "') REFERENCES ";
+    Command += key2;
+    Command += "('";
+    Command += val1;
+    Command += "');" 
     return Command;
     }
