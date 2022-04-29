@@ -24,7 +24,12 @@
 // ]
 // }
 
-function DBCreator()
+// {"dbName":"mydb",
+// "tables":[{"tableName":"table1",
+// "columns":[{"columnName":"col1","dataType":"text","constraints":"PK"},{"columnName":"col2","dataType":"num","constraints":"Null"}]}]}
+
+
+function DBCreator(DBName)
     {
     var Command =new String();
     Command += "CREATE DATABASE ";
@@ -33,44 +38,71 @@ function DBCreator()
     return Command;
     }
 
-function tableCreator(ObjList,tableName)
+function tableCreator(table)
     {
     var Command =new String();
     Command += "CREATE TABLE "; 
     // console.log("line 40"+tableName);
-    Command += tableName;
+    // Command += tableName;
     Command += " (";
-    var i,temp,j;
+    var i,temp,j,tableName;
     // console.log("line 44" +ObjList);
-    for(i=0;i<ObjList.length;i++)
+    for(key in table)
         {
-        ColObj = ObjList[i];
-        // console.log("line 48"+ObjList[i]);
-        for(var key in ObjList[i])
+        if(key=="tableName")
             {
-            if(String(key)=="PRIMARY KEY")
-                {
-                Command += String(key);
-                Command += "(";
-                Command += String(ObjList[i][key]);
-                Command += ")";
-                continue;
-                }
-            Command += String(key);
-            Command += " ";
-            Command += String(ObjList[i][key]);
+            tableName = table[key];
+            Command += tableName;
+            Command += " ( ";
             }
-        // for(j=0;j<ColObj.length;j++)
-        //     {
-        //     Command += String(ColObj[j][0]);
-        //     Command += " ";
-        //     Command += String(ColObj[j][1]);
-        //     }
-        if(i!=ObjList.length-1)
+        else if (key="columns")
             {
-            Command +=",";
+            Columns = table[key];
+            for(var i=0;i<Columns.length;i++)
+                {
+                Column = Columns[i];
+                Command += Columns[i]["columnName"];
+                Command += " ";
+                Command  += Columns[i]["dataType"];
+                Command +=" ";
+                Command += Columns[i]["constraints"]; 
+                if(i!=Columns.length-1)
+                    {
+                    Command += ",";
+                    }
+                }
             }
         }
+
+    // for(i=0;i<ObjList.length;i++)
+    //     {
+    //     ColObj = ObjList[i];
+    //     // console.log("line 48"+ObjList[i]);
+    //     for(var key in ObjList[i])
+    //         {
+    //         if(String(key)=="PRIMARY KEY")
+    //             {
+    //             Command += String(key);
+    //             Command += "(";
+    //             Command += String(ObjList[i][key]);
+    //             Command += ")";
+    //             continue;
+    //             }
+    //         Command += String(key);
+    //         Command += " ";
+    //         Command += String(ObjList[i][key]);
+    //         }
+    //     // for(j=0;j<ColObj.length;j++)
+    //     //     {
+    //     //     Command += String(ColObj[j][0]);
+    //     //     Command += " ";
+    //     //     Command += String(ColObj[j][1]);
+    //     //     }
+    //     if(i!=ObjList.length-1)
+    //         {
+    //         Command +=",";
+    //         }
+    //     }
 
     Command += " );";
     return Command;
@@ -111,45 +143,52 @@ var DBTableNames =new Array();
 function SQLConvertorFunc(Data)
     {
     SQLCommands = new Array();
-    
     DBTableNames = new Array(); 
+    // for(var key in Data)
+    //     {
+    //     DBName =String(key);
+    //     }
+    // SQLCommands.push(DBCreator());
+    // console.log(Data[DBName].length);
     for(var key in Data)
         {
-        DBName =String(key);
-        }
-    SQLCommands.push(DBCreator());
-    // console.log(Data[DBName].length);
-    for(var i=0;i<Data[DBName].length;i++)
-        {
-        if(i==0)
+        if(key=="dbName")
+            {
+            DBName =Data[key];
+            SQLCommands.push(DBCreator(DBName));
+            }
+        else if(key=="tables")
             {
             // console.log(typeof(Data));
             // console.log(Data[DBName][i]);
-            Table = Data[DBName][i]["table"];
+            Tables = Data[key];
             // console.log("Table variable is "+Data[DBName][i]);
             // console.log("line 101"+Table.length);
-            for(var j=0;j<Table.length;j++)
+            for(var i=0;i<Tables.length;i++)
                 {
-                var TableKey; 
-                for(key1 in Table[j])
-                    {
-                    TableKey = key1;
-                    // console.log(String(TableKey));
-                    // console.log(Table[j][TableKey])
-                    // console.log("line 110 "+String(TableKey));
-                    DBTableNames.push(String(TableKey));
-                    }
-                // console.log("line 113 "+Table[j][TableKey]);
-                var Result = tableCreator(Table[j][TableKey],String(TableKey));
-                SQLCommands.push(Result);
-                // for(var i=0;i<List.length;i++)
+                Result = tableCreator(Tables[i])
+                SQLCommands.push(Result)
+                // var TableKey; 
+                // for(key1 in Table[j])
                 //     {
-                //     SQLCommads.push(List[i]);
+                //     TableKey = key1;
+                //     // console.log(String(TableKey));
+                //     // console.log(Table[j][TableKey])
+                //     // console.log("line 110 "+String(TableKey));
+                //     DBTableNames.push(String(TableKey));
                 //     }
-                }
+                // // console.log("line 113 "+Table[j][TableKey]);
+                // var Result = tableCreator(Table[j][TableKey],String(TableKey));
+                // SQLCommands.push(Result);
+                // // for(var i=0;i<List.length;i++)
+                // //     {
+                // //     SQLCommads.push(List[i]);
+                // //     }
+                // }
             // console.log(SQLCommands);
+                }
             }
-        else if(i==1)
+        else if(key=="Fkey")
             {
             var FkeysData;
             FkeysData = Data[DBName][i]["FKeys"];
@@ -168,11 +207,9 @@ function SQLConvertorFunc(Data)
         {"Student":[{"Name":"VARCHAR(255)"},{"RollNO":"INT(255)"},{"passFail":"BOOL"},{"PRIMARY KEY":"RollNO"} ]},
         {"Course":[{"Name":"VARCHAR(255)"},{"CourseID":"INT(255)"},{"PRIMARY KEY":"CourseID"}]
          }]},
-    {"FKeys" :[ [{"Student":"RollNO"},{"Course":"CourseID"}] ] }
-
-
-     
+    {"FKeys" :[ [{"Student":"RollNO"},{"Course":"CourseID"}] ] }   
 ]};
+var testSet2 = {"dbName":"mydb","tables":[{"tableName":"table1","columns":[{"columnName":"col1","dataType":"text","constraints":"PK"},{"columnName":"col2","dataType":"num","constraints":"Null"}]}]}
 
-var Result = SQLConvertorFunc(testSet1);
+var Result = SQLConvertorFunc(testSet2);
 console.log(Result);
