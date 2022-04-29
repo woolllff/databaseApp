@@ -41,11 +41,12 @@ function DBCreator(DBName)
 
 function tableCreator(table)
     {
+    var PrimaryKey="";
     var Command =new String();
     Command += "CREATE TABLE "; 
     // console.log("line 40"+tableName);
     // Command += tableName;
-    Command += " (";
+    // Command += " (";
     var i,temp,j,tableName;
     // console.log("line 44" +ObjList);
     for(key in table)
@@ -66,7 +67,14 @@ function tableCreator(table)
                 Command += " ";
                 Command  += Columns[i]["dataType"];
                 Command +=" ";
+                if(Columns[i]["constraints"]!="" && Columns[i]["constraints"]!="PK")
+                    {
                 Command += Columns[i]["constraints"]; 
+                    }
+                else if(Columns[i]["constraints"]=="PK")
+                    {
+                    PrimaryKey = Columns[i]["columnName"]
+                    }
                 if(i!=Columns.length-1)
                     {
                     Command += ",";
@@ -104,7 +112,12 @@ function tableCreator(table)
     //         Command +=",";
     //         }
     //     }
-
+    if(PrimaryKey!="")
+        {
+        Command += ", PRIMARY KEY(";
+        Command += PrimaryKey;
+        Command += ")";
+        }
     Command += " );";
     return Command;
     }
@@ -114,6 +127,7 @@ function FkeyAdder(FKeyList)
     var table1 = FKeyList["table1Name"];
     var table2 = FKeyList["table2Name"];
     var Command = String();
+    var FKeyName = "";
     Command +="ALTER TABLE ";
     var column1 = FKeyList["column1Name"];
     var column2 = FKeyList["column2Name"];
@@ -122,9 +136,13 @@ function FkeyAdder(FKeyList)
     // FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
     FKeyName = FKeyList["FKName"];
     Command += table1;
-    Command += " ADD CONSTRAINT ";
-    Command += FKeyName;
-
+    Command += " ADD";
+    if(FKeyName!="")
+        {
+        Command +=" CONSTRAINT ";
+        Command += FKeyName;
+        }
+ 
     var key1,val1,key2,val2;
     // for (var key in table1)
     //     {
@@ -223,8 +241,15 @@ var testSet1 = {"DBName1": [
 
 var testSet2 = {
     dbName: "mydb",
-    tables: [{ tableName: "asdad", columns: [{ columnName: "id", dataType: "text", constraints: "pk" }] }],
-    Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: "column1", table2Name: "table2", table2NameIndex: -1, column2Name: "column2", FKName: "FKNAME" }]
+    tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "NOT NULL"}] }, 
+           { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" }] }],
+    Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: "column12", table2Name: "table2", table2NameIndex: -1, column2Name: "column21", FKName: "FKNAME" }]
 }
-var Result = SQLConvertorFunc(testSet2);
+var testSet3 = {
+    dbName: "mydb",
+    tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "NOT NULL"}] }, 
+           { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" },{ columnName: "column22", dataType: "int", constraints: "NOT NULL" }] }],
+    Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: "column12", table2Name: "table2", table2NameIndex: -1, column2Name: "column21", FKName: "FKNAME1" },{ table1Name: "table2", table1NameIndex: -1, column1Name: "column22", table2Name: "table1", table2NameIndex: -1, column2Name: "column11", FKName: "" }]
+}
+var Result = SQLConvertorFunc(testSet3 );
 console.log(Result);
