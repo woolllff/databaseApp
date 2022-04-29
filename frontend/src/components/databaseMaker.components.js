@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import update from 'immutability-helper';
 import {
     FormControl,
     FormLabel,
@@ -8,7 +6,8 @@ import {
     FormHelperText,
     Stack,
     Box,
-    Center
+    Center,
+    Select
 } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
@@ -20,8 +19,11 @@ export default class DatabaseMaker extends Component {
         super(props)
         this.state = {
             dbName: "mydb",
-            tables: [{ tableName: "asdad", columns: [{ columnName: "asdad", dataType: "", constraints: "" }] }]
+            tables: [{ tableName: "asdad", columns: [{ columnName: "id", dataType: "text", constraints: "pk" }] }],
+            Fkeys: [{ table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
         };
+        this.dataTypes = ["Text",];
+        this.constraints = ["primary key",];
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -64,8 +66,29 @@ export default class DatabaseMaker extends Component {
     }
 
     handleSubmit(event) {
+        console.log("submit called")
         event.preventDefault();
         alert(JSON.stringify(this.state));
+        console.log(JSON.stringify(this.state))
+    }
+
+    UpdateFKvalue(event, fKey_index) {
+        var prevState = this.state;
+        console.log(event.target.value)
+        prevState.Fkeys[fKey_index][event.target.name] = event.target.value;
+        // prevState.Fkeys[fKey_index][event.target.name + "Index"] = event.target.value[1];
+        this.setState(prevState)
+    }
+
+    addNewFK() {
+        var prevState = this.state;
+        prevState.Fkeys = [...this.state.Fkeys, { table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
+        this.setState(prevState);
+    }
+    removeFK(event, fKey_index) {
+        var prevState = this.state;
+        prevState.Fkeys.splice(fKey_index, 1);
+        this.setState(prevState);
     }
 
 
@@ -77,15 +100,18 @@ export default class DatabaseMaker extends Component {
             <Center>
                 <FormControl onSubmit={this.handleSubmit} >
 
-                    <FormLabel >Database Name</FormLabel >
-                    <Input type="text" name="dbName" value={this.state.dbName || ""} onChange={e => this.updateDatabaseName(e)} />
+                    <Box>
+                        <FormLabel >Database Name</FormLabel >
+                        <Input type="text" name="dbName" value={this.state.dbName || ""} onChange={e => this.updateDatabaseName(e)} />
+                    </Box>
 
                     {this.state.tables.map((table, t_index) => (
 
                         <Stack paddingLeft='20'>
-                            <FormLabel>Table name</FormLabel>
-                            <Input type="text" name="tableName" value={table.tableName || ""} onChange={e => this.updateTableName(t_index, e)} />
-
+                            <Box>
+                                <FormLabel>Table name</FormLabel>
+                                <Input type="text" name="tableName" value={table.tableName || ""} onChange={e => this.updateTableName(t_index, e)} />
+                            </Box>
 
                             {table.columns.map((column, c_index) => (
 
@@ -95,36 +121,88 @@ export default class DatabaseMaker extends Component {
                                         <Input type="text" name="columnName" value={column.columnName || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
                                     </Box>
                                     <Box>
-                                        <FormLabel>Data Type</FormLabel>
-                                        <Input type="text" name="dataType" value={column.dataType || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
+                                        {/* <FormLabel>Data Type</FormLabel> */}
+                                        <Select placeholder='Data Type' name="dataType" onChange={e => this.updateColumnValues(t_index, c_index, e)}>
+                                            {this.dataTypes.map((dt) => (
+                                                <option value={dt} >{dt}</option>
+                                            ))}
+                                        </Select>
+                                        {/* <Input type="text" name="dataType" value={column.dataType || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} /> */}
                                     </Box>
                                     <Box>
-                                        <FormLabel>Constraints</FormLabel>
-                                        <Input type="text" name="constraints" value={column.constraints || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
 
-
-                                        <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeColumn(t_index, c_index)}>Remove Column</Button>
-
-
+                                        <Select placeholder='Constraint' name="constraints" onChange={e => this.updateColumnValues(t_index, c_index, e)}>
+                                            {this.constraints.map((dt) => (
+                                                <option value={dt} >{dt}</option>
+                                            ))}
+                                        </Select>
+                                        {/* <FormLabel>Constraints</FormLabel> */}
+                                        {/* <Input type="text" name="constraints" value={column.constraints || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} /> */}
                                     </Box>
-
+                                    <Box>
+                                        <Button style={{ display: "flex", justifyContent: "center", alignItems: "center" }} colorScheme='blue' type="button" className="button remove" onClick={() => this.removeColumn(t_index, c_index)}>Remove Column</Button>
+                                    </Box>
                                 </Stack>
 
                             ))}
-
-                            <Button colorScheme='blue' className="buttonAddColumn" type="button" onClick={() => this.addColumn(t_index)}>Add Column</Button>
-
-                            <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeTable(t_index)}> Remove Table </Button>
+                            <Box>
+                                <Button colorScheme='blue' className="buttonAddColumn" type="button" onClick={() => this.addColumn(t_index)}>Add Column</Button>
+                            </Box>
+                            <Box>
+                                <Button colorScheme='blue' type="button" className="button remove" onClick={() => this.removeTable(t_index)}> Remove Table </Button>
+                            </Box>
 
                         </Stack>
                     ))}
-                    <Stack>
-                    <Button colorScheme='blue' className="buttonAddTable" type="button" onClick={() => this.addTable()}>Add Table</Button>
 
-                    <Button colorScheme='blue' className="buttonSubmit" type="submit" onClick={() => this.handleSubmit()}>Submit</Button>
-                    </Stack>
+                    <Box>
+                        <Button colorScheme='blue' className="buttonAddTable" type="button" onClick={() => this.addTable()}>Add Table</Button>
+                    </Box>
+
+                    <Box>
+                        <FormLabel>Foregin keys</FormLabel>
+                    </Box>
+                    <Box>
+                        <Button colorScheme='blue' className="buttonAddFK" type="button" onClick={() => this.addNewFK()}>Add FK</Button>
+                    </Box>
+
+
+
+                    {this.state.Fkeys.map((fKey, fKey_index) => (
+
+                        <Stack paddingLeft='20' direction={['column', 'row']} spacing='24px' key={fKey_index}>
+                            <Box>
+                                <Select placeholder='Table 1 Name' name="table1Name" onChange={e => this.UpdateFKvalue(e, fKey_index)}>
+                                    {this.state.tables.map((table, t_i) => (
+                                        <option value={table.tableName} >{table.tableName}</option>
+                                    ))}
+                                </Select>
+
+                            </Box>
+                            <Box>
+                                <Select placeholder='Table 2 Name' name="table2Name" onChange={e => this.UpdateFKvalue(e, fKey_index)}>
+                                    {this.state.tables.map((table, t_i) => (
+                                        <option value={table.tableName} >{table.tableName}</option>
+                                    ))}
+                                </Select>
+                            </Box>
+
+                            <Box>
+                                <FormLabel>Foregin key name</FormLabel>
+                                <Input type="text" name="FKName" value={fKey.FKName || ""} onChange={e => this.UpdateFKvalue(e, fKey_index)} />
+                            </Box>
+                            <Box>
+                                <Button colorScheme='blue' className="buttonRemoveFK" type="button" onClick={(e) => this.removeFK(e, fKey_index)}>Remove FK</Button>
+                            </Box>
+
+                        </Stack>
+                    ))}
+
+                    <Box>
+                        <Button colorScheme='blue' className="buttonSubmit" type="button" onClick={(e) => this.handleSubmit(e)}>Submit</Button>
+                    </Box>
                 </FormControl>
-            {/* </div> */}
+
             </Center>
         );
     }
