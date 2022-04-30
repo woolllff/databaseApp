@@ -162,7 +162,7 @@ function SQLConvertorFunc(Data)
             {
             var FkeysData;
             FkeysData = Data[key];
-            console.log(FkeysData);
+            // console.log(FkeysData);
             for(var i=0;i<FkeysData.length;i++)
                 {
                 SQLCommands.push(FkeyAdder(FkeysData[i]));
