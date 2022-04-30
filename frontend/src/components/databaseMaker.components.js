@@ -22,8 +22,8 @@ export default class DatabaseMaker extends Component {
             tables: [{ tableName: "asdad", columns: [{ columnName: "id", dataType: "text", constraints: "pk" }] }],
             Fkeys: [{ table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
         };
-        this.dataTypes = ["Text",];
-        this.constraints = ["primary key",];
+        this.dataTypes = []
+        this.constraints = ["NOT NULL", " Check  ", "Default", "Unique", "Primary Key", "FOREIGN KEY"];
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -80,9 +80,20 @@ export default class DatabaseMaker extends Component {
         this.setState(prevState)
     }
 
+    UpdateFKTableValue(event, fKey_index) {
+        var prevState = this.state;
+        console.log(event.target.value)
+        var a = event.target.value.split(",")
+        console.log(a)
+        prevState.Fkeys[fKey_index][event.target.name] = a[0];
+        prevState.Fkeys[fKey_index][event.target.name + "Index"] = parseInt(a[1]);
+        // prevState.Fkeys[fKey_index][event.target.name + "Index"] = event.target.value[1];
+        this.setState(prevState)
+    }
+
     addNewFK() {
         var prevState = this.state;
-        prevState.Fkeys = [...this.state.Fkeys, { table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
+        prevState.Fkeys = [...this.state.Fkeys, { table1Name: "", table1NameIndex: 0, column1aName: "", table2Name: "", table2NameIndex: 0, column2Name: "", FKName: "" }]
         this.setState(prevState);
     }
     removeFK(event, fKey_index) {
@@ -172,19 +183,33 @@ export default class DatabaseMaker extends Component {
 
                         <Stack paddingLeft='20' direction={['column', 'row']} spacing='24px' key={fKey_index}>
                             <Box>
-                                <Select placeholder='Table 1 Name' name="table1Name" onChange={e => this.UpdateFKvalue(e, fKey_index)}>
+                                <Select placeholder='Table 1 Name' name="table1Name" onChange={e => this.UpdateFKTableValue(e, fKey_index)}>
                                     {this.state.tables.map((table, t_i) => (
-                                        <option value={table.tableName} >{table.tableName}</option>
+                                        <option value={[table.tableName, t_i]} >{table.tableName}</option>
                                     ))}
                                 </Select>
+                                {/* <Select placeholder='Col 1 Name' name="column1Name" onChange={e =>  this.UpdateFKvalue(e,fKey_index)}>
+                                        {this.tables[this.Fkeys[fKey_index].table1NameIndex].columns.map((column,c_i) => (
+                                            <option value={column.name}>{column.name}</option>
+                                        )) }
+                                </Select> */}
 
                             </Box>
                             <Box>
-                                <Select placeholder='Table 2 Name' name="table2Name" onChange={e => this.UpdateFKvalue(e, fKey_index)}>
+                                <Select placeholder='Table 2 Name' name="table2Name" onChange={e => this.UpdateFKTableValue(e, fKey_index)}>
                                     {this.state.tables.map((table, t_i) => (
-                                        <option value={table.tableName} >{table.tableName}</option>
+                                        <option value={[table.tableName, t_i]}>{table.tableName}</option>
                                     ))}
                                 </Select>
+                                {/* {this.state.Fkeys[fKey_index].table2NameIndex !== -1 ?
+                                    <Select placeholder='Col 2 Name' name="column2Name" onChange={(e) => this.UpdateFKvalue(e, fKey_index)}>
+                                        {
+                                            this.tables[this.Fkeys[fKey_index].table2NameIndex].columns.map((column, c_i) => (
+                                                <option value={column.name}>{column.name}</option>
+
+                                            ))}
+                                    </Select> : <Box />
+                                } */}
                             </Box>
 
                             <Box>
