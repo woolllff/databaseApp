@@ -1,5 +1,5 @@
-// module.exports = DBCreator;
-export default function DBCreator(DBName)
+module.exports = DBCreator;
+function DBCreator(DBName)
     {
     var Command =new String();
     Command += "CREATE DATABASE ";

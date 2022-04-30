@@ -1,5 +1,5 @@
-// module.exports = tableCreator;
-export default function tableCreator(table)
+module.exports = tableCreator;
+function tableCreator(table)
     {
     var PrimaryKey="";
     var Command =new String();

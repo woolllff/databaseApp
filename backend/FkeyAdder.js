@@ -1,5 +1,5 @@
-// module.export = FkeyAdder;
-export default function FkeyAdder(FKeyList)
+module.exports = FkeyAdder;
+function FkeyAdder(FKeyList)
     {
     var table1 = FKeyList["table1Name"];
     var table2 = FKeyList["table2Name"];

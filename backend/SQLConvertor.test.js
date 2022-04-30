@@ -6,8 +6,8 @@
 // or if you use only assert
 
 // var SQLConvertor = require("./SQLConvertorFunc")
-// import SQLConvertorFunc from "./SQLConvertor.js"
-var SQLConvertorFunc = require("./SQLConvertorFunc");
+// import SQLConvertorFunc from "../SQLConvertor.js"
+const SQLConvertorFunc = require("./SQLConvertor");
 var testSet1 = {"DBName1": [
     {"table": [ 
         {"Student":[["Name","VARCHAR(255)"],["RollNO","INT(255"],["passFail","BOOL"] ]},
@@ -44,10 +44,10 @@ var Ans3 = [
     'ALTER TABLE table2 ADD FOREIGN KEY (column22) REFERENCES table1(column11);'
   ]
 
-test('testSet2 give the expected Output', () => {
-    expect(SQLConvertorFunc(testSet2)).toBe(Ans2);
+test('testSet2 gives the expected Output', () => {
+    expect(JSON.stringify(SQLConvertorFunc(testSet2))).toBe(JSON.stringify(Ans2));
   });
 
-test('testSet3 give the expected Output', () => {
-    expect(SQLConvertorFunc(testSet3)).toBe(Ans3);
+test('testSet3 gives the expected Output', () => {
+    expect(JSON.stringify(SQLConvertorFunc(testSet3)) ).toBe(JSON.stringify(Ans3));
   });  

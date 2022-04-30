@@ -30,12 +30,12 @@
     // Fkeys: [{ table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
 // }
 
-import FkeyAdder from "./FkeyAdder.js";
-import tableCreator from "./tableCreator.js";
-import DBCreator from "./DBCreator.js";
-// var FkeyAdder = require("./FkeyAdder");
-// var DBCreator = require("./DBCreator");
-// var tableCreator = require("./tableCreator");
+// import FkeyAdder from "./FkeyAdder.js";
+// import tableCreator from "./tableCreator.js";
+// import DBCreator from "./DBCreator.js";
+var FkeyAdder = require("./FkeyAdder");
+var DBCreator = require("./DBCreator");
+var tableCreator = require("./tableCreator");
 
 // function DBCreator(DBName)
 //     {
