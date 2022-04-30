@@ -12,14 +12,10 @@
   "author": "Utkarsh Agarwal",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "mocha": "^9.2.2",
-    "mongoose": "^6.3.0",
-    "nodemon": "^2.0.15",
     "unit.js": "^2.1.1"
   },
   "devDependencies": {
+    "nodemon": "^2.0.15",
     "jest": "^28.0.3"
   }
 }
