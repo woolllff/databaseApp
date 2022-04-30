@@ -1,14 +1,5 @@
-module.export ={DBCreator,tableCreator,FkeyAdder};
-function DBCreator(DBName)
-    {
-    var Command =new String();
-    Command += "CREATE DATABASE ";
-    Command += DBName;
-    Command += ";";
-    return Command;
-    }
-
-function tableCreator(table)
+// module.exports = tableCreator;
+export default function tableCreator(table)
     {
     var PrimaryKey="";
     var Command =new String();
@@ -16,7 +7,7 @@ function tableCreator(table)
     // console.log("line 40"+tableName);
     // Command += tableName;
     // Command += " (";
-    var i,temp,j,tableName;
+    var i,temp,j,tableName,key,Columns,Column;
     // console.log("line 44" +ObjList);
     for(key in table)
         {
@@ -60,37 +51,5 @@ function tableCreator(table)
         Command += ")";
         }
     Command += " );";
-    return Command;
-    }
-
-function FkeyAdder(FKeyList)
-    {
-    var table1 = FKeyList["table1Name"];
-    var table2 = FKeyList["table2Name"];
-    var Command = String();
-    var FKeyName = "";
-    Command +="ALTER TABLE ";
-    var column1 = FKeyList["column1Name"];
-    var column2 = FKeyList["column2Name"];
-    // ALTER TABLE Orders
-    // ADD CONSTRAINT FK_PersonOrder
-    // FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
-    FKeyName = FKeyList["FKName"];
-    Command += table1;
-    Command += " ADD";
-    if(FKeyName!="")
-        {
-        Command +=" CONSTRAINT ";
-        Command += FKeyName;
-        }
- 
-    var key1,val1,key2,val2;
-    Command += " FOREIGN KEY (";
-    Command += column1;
-    Command += ") REFERENCES ";
-    Command += table2;
-    Command += "(";
-    Command += column2;
-    Command += ");" 
     return Command;
     }
