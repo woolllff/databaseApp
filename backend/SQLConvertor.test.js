@@ -51,3 +51,7 @@ test('testSet2 gives the expected Output', () => {
 test('testSet3 gives the expected Output', () => {
     expect(JSON.stringify(SQLConvertorFunc(testSet3)) ).toBe(JSON.stringify(Ans3));
   });  
+
+test('testSet3 didnot match with wrong output', () => {
+    expect(JSON.stringify(SQLConvertorFunc(testSet3)) ).not.toBe(JSON.stringify(Ans2));
+  });  
