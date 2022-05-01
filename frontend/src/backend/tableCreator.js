@@ -1,7 +1,8 @@
 module.exports = tableCreator;
 function tableCreator(table)
     {
-    var PrimaryKey="";
+    var PrimaryKeyList=[];
+    var PrimaryKey;
     var Command =new String();
     Command += "CREATE TABLE "; 
     // console.log("line 40"+tableName);
@@ -33,9 +34,9 @@ function tableCreator(table)
                     }
                 else if(Columns[i]["constraints"]=="PK")
                     {
-                    PrimaryKey = Columns[i]["columnName"]
+                    PrimaryKeyList.push(Columns[i]["columnName"]);
                     }
-                if(i!=Columns.length-1)
+                if(i!= (Columns.length-1) )
                     {
                     Command += ",";
                     }
@@ -44,10 +45,18 @@ function tableCreator(table)
         }
 
 
-    if(PrimaryKey!="")
+    if(PrimaryKeyList.length!=0)
         {
         Command += ", PRIMARY KEY(";
-        Command += PrimaryKey;
+        for(var i=0;i<PrimaryKeyList.length;i++)
+            {
+            Command += PrimaryKeyList[i];
+            if(i< (PrimaryKeyList.length-1))
+                {
+                Command +=",";    
+                }
+            }
+        // Command += PrimaryKey;
         Command += ")";
         }
     Command += " );";

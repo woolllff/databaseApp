@@ -27,7 +27,7 @@
 // {
     // dbName: "mydb",
     // tables: [{ tableName: "asdad", columns: [{ columnName: "id", dataType: "text", constraints: "pk" }] }],
-    // Fkeys: [{ table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
+    // Fkeys: [{ table1Name: "", table1NameIndex: -1, column1Name: [], table2Name: "", table2NameIndex: -1, column2Name: [], FKName: "" }]
 // }
 
 // import FkeyAdder from "./FkeyAdder.js";
@@ -141,13 +141,17 @@ function SQLConvertorFunc(Data)
     {
     var SQLCommands = new Array();
     var DBTableNames = new Array(); 
- 
+        
     for(var key in Data)
         {
         if(key=="dbName")
             {
             var DBName =Data[key];
             SQLCommands.push(DBCreator(DBName));
+            var Command = "USE ";
+            Command += DBName;
+            Command +=";";
+            SQLCommands.push(Command);
             }
         else if(key=="tables")
             {
@@ -180,17 +184,17 @@ function SQLConvertorFunc(Data)
 //     {"FKeys" :[ [{"Student":"RollNO"},{"Course":"CourseID"}] ] }   
 // ]};
 
-// var testSet2 = {
-//     dbName: "mydb",
-//     tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "NOT NULL"}] }, 
-//            { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" }] }],
-//     Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: "column12", table2Name: "table2", table2NameIndex: -1, column2Name: "column21", FKName: "FKNAME" }]
-// }
-// var testSet3 = {
-//     dbName: "mydb",
-//     tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "Unique"}] }, 
-//            { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" },{ columnName: "column22", dataType: "int", constraints: "NOT NULL" }] }],
-//     Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: "column12", table2Name: "table2", table2NameIndex: -1, column2Name: "column21", FKName: "FKNAME1" },{ table1Name: "table2", table1NameIndex: -1, column1Name: "column22", table2Name: "table1", table2NameIndex: -1, column2Name: "column11", FKName: "" }]
-// }
-// var Result = SQLConvertorFunc(testSet3);
-// console.log(Result);
+var testSet2 = {
+    dbName: "mydb",
+    tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "PK"}] }, 
+           { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" }] }],
+    Fkeys: [{ table1Name: "table2", table1NameIndex: -1, column1Name: ["column21"], table2Name: "table1", table2NameIndex: -1, column2Name: ["column11","column12"], FKName: "FKNAME1" }]
+}
+var testSet3 = {
+    dbName: "mydb",
+    tables: [{ tableName: "table1", columns: [{ columnName: "column11", dataType: "int", constraints: "PK" },{columnName: "column12", dataType: "int", constraints: "Unique"}] }, 
+           { tableName: "table2", columns: [{ columnName: "column21", dataType: "int", constraints: "PK" },{ columnName: "column22", dataType: "int", constraints: "NOT NULL" }] }],
+    Fkeys: [{ table1Name: "table1", table1NameIndex: -1, column1Name: ["column12"], table2Name: "table2", table2NameIndex: -1, column2Name: ["column21"], FKName: "FKNAME1" },{ table1Name: "table2", table1NameIndex: -1, column1Name: ["column22"], table2Name: "table1", table2NameIndex: -1, column2Name: ["column11"], FKName: "" }]
+}
+var Result = SQLConvertorFunc(testSet3);
+console.log(Result);

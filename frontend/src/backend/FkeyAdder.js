@@ -6,8 +6,8 @@ function FkeyAdder(FKeyList)
     var Command = String();
     var FKeyName = "";
     Command +="ALTER TABLE ";
-    var column1 = FKeyList["column1Name"];
-    var column2 = FKeyList["column2Name"];
+    var column1List = FKeyList["column1Name"];
+    var column2List = FKeyList["column2Name"];
     // ALTER TABLE Orders
     // ADD CONSTRAINT FK_PersonOrder
     // FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
@@ -22,11 +22,25 @@ function FkeyAdder(FKeyList)
  
     var key1,val1,key2,val2;
     Command += " FOREIGN KEY (";
-    Command += column1;
+    for(var i=0;i<column1List.length;i++)
+        {
+        Command += column1List[i]
+        if(i!=column1List.length-1)
+            {
+            Command += ",";
+            }
+        }
     Command += ") REFERENCES ";
     Command += table2;
     Command += "(";
-    Command += column2;
+    for(var i=0;i<column2List.length;i++)
+    {
+    Command += column2List[i]
+    if(i!=column2List.length-1)
+        {
+        Command += ",";
+        }
+    }
     Command += ");" 
     return Command;
     }
