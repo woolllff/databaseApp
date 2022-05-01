@@ -50,11 +50,11 @@ const Logger =  createLogger({
                 // new transports.Stream
             ]
   });
-Logger.add(
-    new DatadogWinston({
-      apiKey: 'c69f14ea7db8ae2d89371c48d101484a',
-      hostname: 'shivaram',
-      ddsource: 'nodejs',
-    })
-  )
+// Logger.add(
+//     new DatadogWinston({
+//       apiKey: 'c69f14ea7db8ae2d89371c48d101484a',
+//       hostname: 'shivaram',
+//       ddsource: 'nodejs',
+//     })
+//   )
 module.exports = { Logger};
