@@ -9,8 +9,11 @@ pipeline {
     stages {
         stage('Test'){
             steps{
-                git branch: 'deployment', changelog: false, credentialsId: 'github_id', poll: false, url: 'https://github.com/woolllff/databaseApp.git'
-                cd 
+                git branch: 'UI', changelog: false, credentialsId: 'github_id', poll: false, url: 'https://github.com/woolllff/databaseApp.git'
+                bat '''cd frontend
+                npm i 
+                npm run test-backend'''
+
             }
         }
         stage('Build Docker'){
@@ -34,15 +37,15 @@ pipeline {
                 bat "docker rmi $registry:latest" 
             }
         }
-        stage("Ansible Setup") {
-             steps {
-                dir('./ansible'){
-                    script{
-                        def ansibleImage = docker.build("ansibleImage")
-                    }
-                }
-            }
-        }
+        // stage("Ansible Setup") {
+        //      steps {
+        //         dir('./ansible'){
+        //             script{
+        //                 def ansibleImage = docker.build("ansibleImage")
+        //             }
+        //         }
+        //     }
+        // }
         
         
     }

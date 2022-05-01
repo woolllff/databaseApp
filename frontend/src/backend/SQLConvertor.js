@@ -153,9 +153,8 @@ function SQLConvertorFunc(Data)
             {
             var Tables = Data[key];
             for(var i=0;i<Tables.length;i++)
-                {
-                Result = tableCreator(Tables[i])
-                SQLCommands.push(Result)
+                { 
+                SQLCommands.push(tableCreator(Tables[i]))
                 }
             }
         else if(key=="Fkeys")

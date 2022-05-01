@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { Button } from '@chakra-ui/react'
 import { Input } from '@chakra-ui/react'
-
+const SQLConvertorFunc = require("../backend/SQLConvertor");
 
 export default class DatabaseMaker extends Component {
 
@@ -20,10 +20,10 @@ export default class DatabaseMaker extends Component {
         this.state = {
             dbName: "mydb",
             tables: [{ tableName: "asdad", columns: [{ columnName: "id", dataType: "text", constraints: "pk" }] }],
-            Fkeys: [{ table1Name: "", table1NameIndex: -1, column1aName: "", table2Name: "", table2NameIndex: -1, column2Name: "", FKName: "" }]
+            Fkeys: [{ table1Name: "", table1NameIndex: -1, column1Name: [""], table2Name: "", table2NameIndex: -1, column2Name: [""], FKName: "" }]
         };
         this.dataTypes = []
-        this.constraints = ["NOT NULL", " Check  ", "Default", "Unique", "Primary Key", "FOREIGN KEY"];
+        this.constraints = ["NOT NULL", " Check  ", "Default", "Unique", "PK", "FOREIGN KEY"];
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -68,15 +68,21 @@ export default class DatabaseMaker extends Component {
     handleSubmit(event) {
         console.log("submit called")
         event.preventDefault();
+        console.log(this.state)
+        console.log(SQLConvertorFunc(this.state))
         alert(JSON.stringify(this.state));
-        console.log(JSON.stringify(this.state))
     }
 
     UpdateFKvalue(event, fKey_index) {
         var prevState = this.state;
         console.log(event.target.value)
         prevState.Fkeys[fKey_index][event.target.name] = event.target.value;
-        // prevState.Fkeys[fKey_index][event.target.name + "Index"] = event.target.value[1];
+        this.setState(prevState)
+    }
+
+    UpdateFKColumvalue(event, fKey_index) {
+        var prevState = this.state;
+        prevState.Fkeys[fKey_index][event.target.name] = [...this.state.Fkeys[fKey_index][event.target.name], event.target.value];
         this.setState(prevState)
     }
 
@@ -87,13 +93,12 @@ export default class DatabaseMaker extends Component {
         console.log(a)
         prevState.Fkeys[fKey_index][event.target.name] = a[0];
         prevState.Fkeys[fKey_index][event.target.name + "Index"] = parseInt(a[1]);
-        // prevState.Fkeys[fKey_index][event.target.name + "Index"] = event.target.value[1];
         this.setState(prevState)
     }
 
     addNewFK() {
         var prevState = this.state;
-        prevState.Fkeys = [...this.state.Fkeys, { table1Name: "", table1NameIndex: 0, column1aName: "", table2Name: "", table2NameIndex: 0, column2Name: "", FKName: "" }]
+        prevState.Fkeys = [...this.state.Fkeys, { table1Name: "", table1NameIndex: 0, column1Name: "", table2Name: "", table2NameIndex: 0, column2Name: "", FKName: "" }]
         this.setState(prevState);
     }
     removeFK(event, fKey_index) {
@@ -107,7 +112,7 @@ export default class DatabaseMaker extends Component {
     render() {
 
         return (
-            // <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+
             <Center>
                 <FormControl onSubmit={this.handleSubmit} >
 
@@ -132,13 +137,13 @@ export default class DatabaseMaker extends Component {
                                         <Input type="text" name="columnName" value={column.columnName || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} />
                                     </Box>
                                     <Box>
-                                        {/* <FormLabel>Data Type</FormLabel> */}
+
                                         <Select placeholder='Data Type' name="dataType" onChange={e => this.updateColumnValues(t_index, c_index, e)}>
                                             {this.dataTypes.map((dt) => (
                                                 <option value={dt} >{dt}</option>
                                             ))}
                                         </Select>
-                                        {/* <Input type="text" name="dataType" value={column.dataType || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} /> */}
+
                                     </Box>
                                     <Box>
 
@@ -147,8 +152,7 @@ export default class DatabaseMaker extends Component {
                                                 <option value={dt} >{dt}</option>
                                             ))}
                                         </Select>
-                                        {/* <FormLabel>Constraints</FormLabel> */}
-                                        {/* <Input type="text" name="constraints" value={column.constraints || ""} onChange={e => this.updateColumnValues(t_index, c_index, e)} /> */}
+
                                     </Box>
                                     <Box>
                                         <Button style={{ display: "flex", justifyContent: "center", alignItems: "center" }} colorScheme='blue' type="button" className="button remove" onClick={() => this.removeColumn(t_index, c_index)}>Remove Column</Button>
@@ -188,11 +192,10 @@ export default class DatabaseMaker extends Component {
                                         <option value={[table.tableName, t_i]} >{table.tableName}</option>
                                     ))}
                                 </Select>
-                                {/* <Select placeholder='Col 1 Name' name="column1Name" onChange={e =>  this.UpdateFKvalue(e,fKey_index)}>
-                                        {this.tables[this.Fkeys[fKey_index].table1NameIndex].columns.map((column,c_i) => (
-                                            <option value={column.name}>{column.name}</option>
-                                        )) }
-                                </Select> */}
+                                <Box>
+                                    <FormLabel>Column name</FormLabel>
+                                    <Input type="text" name="column1Name" value={""} onChange={e => this.UpdateFKColumvalue(e, fKey_index)} />
+                                </Box>
 
                             </Box>
                             <Box>
@@ -201,15 +204,10 @@ export default class DatabaseMaker extends Component {
                                         <option value={[table.tableName, t_i]}>{table.tableName}</option>
                                     ))}
                                 </Select>
-                                {/* {this.state.Fkeys[fKey_index].table2NameIndex !== -1 ?
-                                    <Select placeholder='Col 2 Name' name="column2Name" onChange={(e) => this.UpdateFKvalue(e, fKey_index)}>
-                                        {
-                                            this.tables[this.Fkeys[fKey_index].table2NameIndex].columns.map((column, c_i) => (
-                                                <option value={column.name}>{column.name}</option>
-
-                                            ))}
-                                    </Select> : <Box />
-                                } */}
+                                <Box>
+                                    <FormLabel>Column name</FormLabel>
+                                    <Input type="text" name="column2Name" value={""} onChange={e => this.UpdateFKColumvalue(e, fKey_index)} />
+                                </Box>
                             </Box>
 
                             <Box>
