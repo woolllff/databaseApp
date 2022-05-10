@@ -1,19 +1,23 @@
-module.exports = tableCreator;
+const { Logger } = require("./logger");
+
 function tableCreator(table)
     {
-    var PrimaryKey="";
+    var PrimaryKeyList=[];
+    var PrimaryKey;
     var Command =new String();
     Command += "CREATE TABLE "; 
-    // console.log("line 40"+tableName);
-    // Command += tableName;
-    // Command += " (";
     var i,temp,j,tableName,key,Columns,Column;
-    // console.log("line 44" +ObjList);
     for(key in table)
         {
         if(key=="tableName")
             {
             tableName = table[key];
+            if(tableName.length==0)
+                {
+                Logger.warn("tableName not provided");
+                // continue; 
+                return "";
+            }
             Command += tableName;
             Command += " ( ";
             }
@@ -23,6 +27,16 @@ function tableCreator(table)
             for(var i=0;i<Columns.length;i++)
                 {
                 Column = Columns[i];
+                if(Columns[i]["columnName"].length==0  )
+                    {
+                    Logger.warn("tableName not provided");
+                    continue; 
+                    }
+                if(Columns[i]["dataType"].length==0  )
+                    {
+                    Logger.warn("datatype not provided");
+                    continue; 
+                    }
                 Command += Columns[i]["columnName"];
                 Command += " ";
                 Command  += Columns[i]["dataType"];
@@ -33,9 +47,9 @@ function tableCreator(table)
                     }
                 else if(Columns[i]["constraints"]=="PK")
                     {
-                    PrimaryKey = Columns[i]["columnName"]
+                    PrimaryKeyList.push(Columns[i]["columnName"]);
                     }
-                if(i!=Columns.length-1)
+                if(i!= (Columns.length-1) )
                     {
                     Command += ",";
                     }
@@ -43,13 +57,26 @@ function tableCreator(table)
             }
         }
 
-
-    if(PrimaryKey!="")
+    if(PrimaryKeyList.length==0)
         {
+        Logger.error("No Primary Key Specified");
+        return "";
+        }  
+    if(PrimaryKeyList.length!=0)
+        {
+  
         Command += ", PRIMARY KEY(";
-        Command += PrimaryKey;
+        for(var i=0;i<PrimaryKeyList.length;i++)
+            {
+            Command += PrimaryKeyList[i];
+            if(i< (PrimaryKeyList.length-1))
+                {
+                Command +=",";    
+                }
+            }
         Command += ")";
         }
     Command += " );";
     return Command;
     }
+module.exports = tableCreator;
