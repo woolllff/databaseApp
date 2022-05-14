@@ -1,4 +1,4 @@
-const { Logger } = require("./logger");
+// const { Logger } = require("./logger");
 
 function FkeyAdder(FKeyList)
     {
@@ -11,7 +11,7 @@ function FkeyAdder(FKeyList)
     var column2List = FKeyList["column2Name"];
     if(table1.length==0 || table2.length==0 || column1List.length==0 || column2List.length==0)
         {
-        Logger.warn("Foriegn Key input not correct");
+        // Logger.warn("Foriegn Key input not correct");
         return "";
         }
     FKeyName = FKeyList["FKName"];

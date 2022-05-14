@@ -36,7 +36,7 @@
 var FkeyAdder = require("./FkeyAdder");
 var DBCreator = require("./DBCreator");
 var tableCreator = require("./tableCreator");
-const { Logger } = require("./logger");
+// const { Logger } = require("./logger");
 
 module.exports = SQLConvertorFunc;
 function SQLConvertorFunc(Data)
@@ -51,11 +51,11 @@ function SQLConvertorFunc(Data)
             var DBName =Data[key];
             if(DBName.length==0)
                 {
-                Logger.error("DBName not provided");
+                // Logger.error("DBName not provided");
                 return [];
                 }
             SQLCommands.push(DBCreator(DBName));
-            Logger.info('computed SQL code to create DB using DBCreator funtion');
+            // Logger.info('computed SQL code to create DB using DBCreator funtion');
             var Command = "USE ";
             Command += DBName;
             Command +=";";
@@ -68,7 +68,7 @@ function SQLConvertorFunc(Data)
                 { 
                 SQLCommands.push(tableCreator(Tables[i]))
                 }
-            Logger.info('computed SQL code to create tables using tableCreator funtion');
+            // Logger.info('computed SQL code to create tables using tableCreator funtion');
             }
         else if(key=="Fkeys")
             {
@@ -79,7 +79,7 @@ function SQLConvertorFunc(Data)
                 {
                 SQLCommands.push(FkeyAdder(FkeysData[i]));
                 }
-            Logger.info('computed SQL code to create Foriegn Keys using FkeyAdder funtion');
+            // Logger.info('computed SQL code to create Foriegn Keys using FkeyAdder funtion');
             
             }
         }
@@ -92,7 +92,7 @@ function SQLConvertorFunc(Data)
             SQLCommands.push(SQLCommandsTemp[i]);
             }
         }
-    Logger.info("Succesfully returning the SQL command");
+    // Logger.info("Succesfully returning the SQL command");
     return SQLCommands;
     }
 

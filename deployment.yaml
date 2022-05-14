@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: databaseapp-deployment
+  labels:
+    app: databaseapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: databaseapp
+  template:
+    metadata:
+      labels:
+        app: databaseapp
+    spec:
+      containers:
+        - name: dbapp
+          image: databaseapp.azurecr.io/databaseapp
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: databaseapp
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+  selector:
+    app: databaseapp

@@ -1,9 +1,9 @@
-const { Logger } = require("./logger");
+// const { Logger } = require("./logger");
 
 function tableCreator(table)
     {
     var PrimaryKeyList=[];
-    var PrimaryKey;
+    // var PrimaryKey;s
     var Command =new String();
     Command += "CREATE TABLE "; 
     var i,temp,j,tableName,key,Columns,Column;
@@ -14,7 +14,7 @@ function tableCreator(table)
             tableName = table[key];
             if(tableName.length==0)
                 {
-                Logger.warn("tableName not provided");
+                // Logger.warn("tableName not provided");
                 // continue; 
                 return "";
             }
@@ -24,17 +24,17 @@ function tableCreator(table)
         else if (key="columns")
             {
             Columns = table[key];
-            for(var i=0;i<Columns.length;i++)
+            for(i=0;i<Columns.length;i++)
                 {
                 Column = Columns[i];
                 if(Columns[i]["columnName"].length==0  )
                     {
-                    Logger.warn("tableName not provided");
+                    // Logger.warn("tableName not provided");
                     continue; 
                     }
                 if(Columns[i]["dataType"].length==0  )
                     {
-                    Logger.warn("datatype not provided");
+                    // Logger.warn("datatype not provided");
                     continue; 
                     }
                 Command += Columns[i]["columnName"];
@@ -59,7 +59,7 @@ function tableCreator(table)
 
     if(PrimaryKeyList.length==0)
         {
-        Logger.error("No Primary Key Specified");
+        // Logger.error("No Primary Key Specified");
         return "";
         }  
     if(PrimaryKeyList.length!=0)

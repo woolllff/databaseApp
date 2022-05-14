@@ -37,6 +37,14 @@ pipeline {
                 bat "docker rmi $registry:latest" 
             }
         }
+        stage('Ansible Deploy')
+        {
+            agent any
+            steps 
+                {
+                ansiblePlaybook colorized: true, disableHostKeyChecking: true, installation: "Ansible", inventory: 'Inv.inv',playbook:'Playbook.yml'
+                }
+        }
         // stage("Ansible Setup") {
         //      steps {
         //         dir('./ansible'){
