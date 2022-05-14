@@ -18,3 +18,9 @@
       shell: docker image rm -f woolllff/databaseapp:latest
     - name: Pull woolllff/databaseapp
       shell: docker pull woolllff/databaseapp:latest
+    - name: stop  docker container
+      shell: docker stop dbapp
+    - name: remove docker container
+      shell : docker rm dbapp 
+    - name: run the docker container
+      shell: docker run -d -p 3000:3000 --name dbapp woolllff/databaseapp:latest
