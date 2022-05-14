@@ -10,9 +10,9 @@ pipeline {
         stage('Test'){
             steps{
                 git branch: 'main', changelog: false, credentialsId: 'github_id', poll: false, url: 'https://github.com/woolllff/databaseApp.git'
-                bat '''cd frontend
-                npm i 
-                npm run test-backend'''
+                // bat '''cd frontend
+                // npm i 
+                // npm run test-backend'''
 
             }
         }
@@ -37,24 +37,22 @@ pipeline {
                 bat "docker rmi $registry:latest" 
             }
         }
-        // stage('Ansible Deploy')
-        // {
-        //     agent any
-        //     steps 
-        //         {
-        //         ansiblePlaybook colorized: true, disableHostKeyChecking: true, installation: "Ansible", inventory: 'Inv.inv',playbook:'Playbook.yml'
-        //         }
-        // }
-        // stage("Ansible Setup") {
-        //      steps {
-        //         dir('./ansible'){
-        //             script{
-        //                 def ansibleImage = docker.build("ansibleImage")
-        //             }
-        //         }
-        //     }
-        // }
-        
-        
+
+        stage("Ansible Setup") {
+             steps {
+                dir('./ansible'){
+                    script{
+                        def ansibleImage = docker.build("ansibleImage")
+                    }
+                }
+            }
+        }
+        stage('Ansible Deploy')
+        {
+            steps 
+                {
+                  bat "docker run -d --name ansible ansible:latest" 
+                }
+        }
     }
 }
