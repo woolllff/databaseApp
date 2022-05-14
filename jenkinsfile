@@ -42,7 +42,7 @@ pipeline {
              steps {
                 dir('./ansible'){
                     script{
-                        def ansibleImage = docker.build("ansibleImage")
+                        def ansibleImage = docker.build("ansibleimage")
                     }
                 }
             }
@@ -51,7 +51,7 @@ pipeline {
         {
             steps 
                 {
-                  bat "docker run -d --name ansible ansible:latest" 
+                  bat "docker run -d --name ansible ansibleimage:latest"    
                 }
         }
     }
