@@ -1,9 +1,0 @@
-- name: Pull and Run docker image
-  hosts: all
-  tasks:
-    - name: Pull woolllff/databaseApp
-      docker_image:
-        name: woolllff/databaseApp
-        source: pull
-      # vars:
-      #   - ansible_python_interpreter: /usr/bin/python

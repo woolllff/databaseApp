@@ -1,0 +1,11 @@
+[azure]
+20.242.107.175
+
+[all:vars]
+ansible_connection=ssh
+ansible_user=woolllff
+ansible_ssh_user=woolllff
+ansible_pass=@Qwerty7877uiop
+ansible_ssh_pass=@Qwerty7877uiop
+ansible_python_interpreter=/usr/bin/python3
+ansible_sudo_pass=@Qwerty7877uiop
